@@ -1,0 +1,46 @@
+[
+  {
+    "id": "84b2935b-a0a0-4c46-9a39-b4b576c6fcac",
+    "to": "qqbot:c2c:4D8D2C88C69A23E3FB161DC0B1D84127",
+    "time": "每天中午11点30",
+    "topics": [
+      "国际科技",
+      "国际军事"
+    ],
+    "name": "每日新闻推送: 国际科技、国际军事",
+    "schedule": {
+      "kind": "cron",
+      "expr": "30 11 * * *",
+      "tz": "Asia/Shanghai"
+    },
+    "timezone": "Asia/Shanghai",
+    "prompt": "请整理今天的新闻简报，主题为：国际科技、国际军事。要求：1. 通过 web_fetch 等方式抓取当天相关新闻 2. 优先权威来源，过滤重复和明显旧闻 3. 每个主题整理 2 到 4 条 4. 每条格式为“标题 | 来源 | 要点” 5. 总体保持简洁，适合即时消息阅读 6. 直接输出最终简报，不要解释过程。\n\n输出结构示例：\n今日热点简报\n\n## 国际科技\n## 国际军事\n1. 标题 | 来源：xxx | 要点：xxx",
+    "delivery": {
+      "mode": "announce",
+      "channel": "qqbot",
+      "to": "qqbot:c2c:4D8D2C88C69A23E3FB161DC0B1D84127"
+    },
+    "deleteAfterRun": false
+  },
+  {
+    "id": "127a6a24-a851-4a17-9289-2cc429c60a20",
+    "to": "qqbot:c2c:4D8D2C88C69A23E3FB161DC0B1D84127",
+    "time": "五分钟后",
+    "topics": [
+      "今日新闻"
+    ],
+    "name": "每日新闻推送: 今日新闻",
+    "schedule": {
+      "kind": "at",
+      "at": "2026-04-24T06:25:00.000Z"
+    },
+    "timezone": "Asia/Shanghai",
+    "prompt": "请整理今天的新闻简报，主题为：今日新闻。要求：1. 通过 web_fetch 等方式抓取当天相关新闻 2. 优先权威来源，过滤重复和明显旧闻 3. 每个主题整理 2 到 4 条 4. 每条格式为“标题 | 来源 | 要点” 5. 总体保持简洁，适合即时消息阅读 6. 直接输出最终简报，不要解释过程。\n\n输出结构示例：\n今日热点简报\n\n## 今日新闻\n1. 标题 | 来源：xxx | 要点：xxx",
+    "delivery": {
+      "mode": "announce",
+      "channel": "qqbot",
+      "to": "qqbot:c2c:4D8D2C88C69A23E3FB161DC0B1D84127"
+    },
+    "deleteAfterRun": true
+  }
+]
