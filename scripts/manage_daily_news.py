@@ -17,7 +17,7 @@ DEFAULT_TOPICS = ["国际科技", "国际军事"]
 
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser()
-    p.add_argument("action", choices=["add", "list", "remove", "update", "set-timezone", "get-timezone"])
+    p.add_argument("action", choices=["add", "list", "remove", "update", "test", "set-timezone", "get-timezone"])
     p.add_argument("--to")
     p.add_argument("--time")
     p.add_argument("--topics")
@@ -141,13 +141,15 @@ def build_prompt(topics: list[str]) -> str:
     )
 
 
-def build_agent_message(to: str, topics: list[str]) -> str:
+def build_agent_message(to: str, topics: list[str], *, test_mode: bool = False) -> str:
     topic_text = "、".join(topics)
+    prefix = "[TEST] " if test_mode else ""
     return (
-        f"请为 QQ 用户 {to} 生成并投递一份今日新闻简报，主题：{topic_text}。"
+        f"{prefix}请为 QQ 用户 {to} 生成并投递一份今日新闻简报，主题：{topic_text}。"
         "先抓取当天相关新闻，再筛选、去重、整理为简洁中文简报。"
         "输出时直接给用户最终内容，不要解释过程，不要输出系统说明。"
         "每个主题 2 到 4 条，每条包含标题、来源、要点。"
+        "如果是测试，只需要立即发出一份简洁可读的真实新闻简报即可。"
     )
 
 
@@ -298,11 +300,11 @@ def resolve_schedule(time_text: str, timezone: str) -> tuple[str | None, str | N
     return parse_time_text(time_text, timezone)
 
 
-def create_cron_job(openclaw_cmd: str, *, to: str, topics: list[str], time_text: str) -> dict:
+def create_cron_job(openclaw_cmd: str, *, to: str, topics: list[str], time_text: str, test_mode: bool = False) -> dict:
     timezone = ensure_timezone(to)
     at_value, cron_expr = resolve_schedule(time_text, timezone)
     name = build_content(topics)
-    message = build_agent_message(to, topics)
+    message = build_agent_message(to, topics, test_mode=test_mode)
     cmd = [
         openclaw_cmd,
         "cron",
@@ -364,6 +366,12 @@ def create_subscription(to: str, time_text: str, topics: list[str]) -> dict:
     items.append(entry)
     save_state(items)
     return entry
+
+
+def create_test_push(to: str, topics: list[str], time_text: str = "5分钟后") -> dict:
+    openclaw_cmd = find_openclaw_cmd()
+    payload = create_cron_job(openclaw_cmd, to=to, topics=topics, time_text=time_text, test_mode=True)
+    return build_entry(payload, to=to, time_text=time_text, topics=topics)
 
 
 def list_subscriptions(to: str) -> list[dict]:
@@ -438,6 +446,14 @@ def main() -> int:
         if args.time is None and args.topics is None:
             raise SystemExit("update needs at least one of --time or --topics")
         print_json(update_subscription(args.id, time_text=args.time, topics_raw=args.topics))
+        return 0
+
+    if args.action == "test":
+        if not args.to:
+            raise SystemExit("test needs --to")
+        topics = normalize_topics(args.topics)
+        ensure_timezone(args.to)
+        print_json(create_test_push(args.to, topics, time_text=args.time or "5分钟后"))
         return 0
 
     if args.action == "add":

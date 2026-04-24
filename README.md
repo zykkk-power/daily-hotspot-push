@@ -43,10 +43,22 @@ Examples use the bundled script:
 python scripts/manage_daily_news.py set-timezone --to "<qq-target>" --timezone "Asia/Shanghai"
 python scripts/manage_daily_news.py add --to "<qq-target>" --time "每天中午12点" --topics "国际科技,国际军事"
 python scripts/manage_daily_news.py add --to "<qq-target>" --time "5分钟后" --topics "今日新闻"
+python scripts/manage_daily_news.py test --to "<qq-target>" --topics "今日新闻"
 python scripts/manage_daily_news.py list --to "<qq-target>"
 python scripts/manage_daily_news.py update --id "<job-id>" --time "每天晚上8点"
 python scripts/manage_daily_news.py remove --id "<job-id>"
 ```
+
+## Example user requests
+
+These are the kinds of user phrases this skill should handle well:
+
+- `每天中午12点给我推送国际科技和国际军事热点`
+- `工作日早上8点发一份今日热点简报`
+- `把我的新闻订阅改成每天晚上9点`
+- `以后每天给我推送国际科技新闻`
+- `取消我的每日新闻推送`
+- `先测试一下，五分钟后给我推送一条今日新闻`
 
 ## Notes
 
