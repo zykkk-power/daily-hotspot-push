@@ -20,13 +20,29 @@ Typical use cases:
 - subscription state storage
 - suitable for QQBot delivery workflows
 
-## Main commands
+## Installation
+
+Place the skill in your OpenClaw workspace skills directory, or install it from ClawHub.
+
+Typical local path:
+
+```text
+~/.openclaw/workspace/skills/daily-news-push
+```
+
+After installation, make sure your OpenClaw runtime can use:
+- `openclaw cron`
+- your target delivery channel, for example QQBot
+- web/news fetching at execution time
+
+## Usage
 
 Examples use the bundled script:
 
 ```bash
 python scripts/manage_daily_news.py set-timezone --to "<qq-target>" --timezone "Asia/Shanghai"
 python scripts/manage_daily_news.py add --to "<qq-target>" --time "每天中午12点" --topics "国际科技,国际军事"
+python scripts/manage_daily_news.py add --to "<qq-target>" --time "5分钟后" --topics "今日新闻"
 python scripts/manage_daily_news.py list --to "<qq-target>"
 python scripts/manage_daily_news.py update --id "<job-id>" --time "每天晚上8点"
 python scripts/manage_daily_news.py remove --id "<job-id>"
